@@ -1,0 +1,21 @@
+### List all movies
+GET http://localhost:3000/movies/dasdasd
+
+# `/search/skills?s=${searchString}`
+
+### Create new movies
+
+POST http://localhost:3000/movies/search
+Content-type: application/json
+
+{
+    "content": "Test"
+}
+
+
+### Get a paricular movie
+GET http://localhost:3000/movies/123123
+
+
+# ### Search for movies
+# GET http://localhost:3000/movies/123123
