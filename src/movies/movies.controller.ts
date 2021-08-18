@@ -6,31 +6,29 @@ export class MoviesController {
 
     @Get()
     getAllMovies() {
-        return "Get all movies";
+        return "GET all movies";
     }
 
     @Get('/:id')
     getMovieById(@Param('id') id: GetMovieByIdDto) {
-        console.log(id);        
-        // return this.httpService.get('http://localhost:3000/cats');
+        console.log(id);
+        return "GET movie by id"        
     }
 
     @Post('/search')
     searchMovieByString(@Body() body: SearchMovieByStringDto) {
         console.log(body);
-        return 'Searched movies';
+        return 'Searched movies by string';
     }
 
-    @Post('/favorites')
-    addMoviesInFavorites(@Body() body: any) {
-        console.log("BODY: ", body);
-        return 'Added in favorites';
+    @Post('/rate')
+    rateMovie() {
+        return 'Rate movie';
     }
 
-    @Delete('/favorites')
-    removeMoviesFromFavorites(@Body() body: any) {
-        console.log("BODY: ", body);
-        return 'Remove from favorites';
+    @Post('/comment')
+    commentMovie() {
+        return 'Comment movie';
     }
 
 }
