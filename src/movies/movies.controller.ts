@@ -15,18 +15,16 @@ export class MoviesController {
 
     @Get()
     getAllMovies() {
-        const res = this.moviesService.getAll(); 
-        return res;
+        return this.moviesService.getAll();
     }
     
     @Get('/:id')
-    async getMovieById(@Param('id') id: string) {
-        return await this.moviesService.getById(id);       
+    async getMovieById(@Param('id') id: string) {        
+        return await this.moviesService.getById(id);
     }
     
     @Post('/search')
     async searchMovieByString(@Body() body: any) {
-        // this.moviesService.testDb()
         return await this.moviesService.getByString(body.query);
     }
 
