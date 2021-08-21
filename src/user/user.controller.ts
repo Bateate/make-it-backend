@@ -1,14 +1,17 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Signin, Signout } from 'src/interfaces/dtos/user.dto';
+import { Signin, Signout } from 'src/dtos/user.dto';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+   constructor(private userService: UserService){}
+   
     @Post('/signup')
     signup(@Body() body: Signout) {
-        console.log(body);
+        this.userService.create(body.email, body.username, body.password, body.first_name, body.last_name);
         return 'signup';
     }
-
+    
     @Post('/signin')
     signin(@Body() body: Signin) {
         console.log(body);

@@ -1,24 +1,33 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { GetMovieByIdDto, SearchMovieByStringDto } from 'src/interfaces/dtos/movies.dto';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { GetMovieByIdDto, SearchMovieByStringDto } from 'src/dtos/movies.dto';
+import { MoviesService } from './movies.service';
+import { AxiosResponse } from 'axios'
+import { HttpService } from '@nestjs/axios';
+
 
 @Controller('movies')
 export class MoviesController {
+    constructor(
+        private moviesService: MoviesService, 
+        private readonly http: HttpService
+        ) { }
+
 
     @Get()
     getAllMovies() {
-        return "GET all movies";
+        const res = this.moviesService.getAll(); 
+        return res;
     }
-
+    
     @Get('/:id')
-    getMovieById(@Param('id') id: GetMovieByIdDto) {
-        console.log(id);
-        return "GET movie by id"        
+    async getMovieById(@Param('id') id: string) {
+        return await this.moviesService.getById(id);       
     }
-
+    
     @Post('/search')
-    searchMovieByString(@Body() body: SearchMovieByStringDto) {
-        console.log(body);
-        return 'Searched movies by string';
+    async searchMovieByString(@Body() body: any) {
+        // this.moviesService.testDb()
+        return await this.moviesService.getByString(body.query);
     }
 
     @Post('/rate')
