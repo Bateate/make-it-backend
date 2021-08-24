@@ -1,8 +1,8 @@
-import { IsEmail, IsString } from 'class-validator'
+import { IsArray, IsEmail, IsString } from 'class-validator'
 
 export class Signin {
-    @IsEmail()
-    email: string;
+    @IsString()
+    username: string;
     
     @IsString()
     password: string;
@@ -10,18 +10,23 @@ export class Signin {
     
 }
 
-export class Signout {
+export class Signup {
     @IsEmail()
     email: string; 
     @IsString()
     username: string;
-    
     @IsString()
     password: string; 
-    
+    @IsArray()
+    favorites: string[]; 
+}
+
+
+export class User {
+    @IsEmail()
+    email: string; 
     @IsString()
-    first_name: string;
-    
-    @IsString()
-    last_name: string;
+    username: string;
+    @IsArray()
+    favorites: string[]; 
 }

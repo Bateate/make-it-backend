@@ -10,4 +10,7 @@ export class MoviesEntity {
 
     @Column()
     provider_id: string;
+
+    @Column()
+    comments: string;
 }

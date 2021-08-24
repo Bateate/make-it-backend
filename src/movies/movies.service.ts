@@ -1,10 +1,10 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { User } from 'src/dtos/user.dto';
+import { UserService } from 'src/user/user.service';
 import { Repository } from "typeorm";
 import { MoviesEntity } from "./movies.entity";
-import { HttpService } from '@nestjs/axios';
-import { first } from "rxjs";
-import axios from "axios";
 
 
 @Injectable()
@@ -15,22 +15,30 @@ export class MoviesService {
     ) { }
 
     public async getAll(){
-        const res = await this.http.get('https://api.tvmaze.com/shows').toPromise();
+        const res = await this.http.get('https://api.tvmaze.com/shows').toPromise();   
         return this.getAllMaping(res.data);
     } 
     
     
     public async getById(id: string){
         const res = await this.http.get(`https://api.tvmaze.com/shows/${id}`).toPromise();
-        return this.mapingMovie(res.data, false); 
+        const comments = await this.moviesRepository.find({ provider_id: id });
+        return this.mapingMovie(res.data, false, comments); 
     } 
     
     public async getByString(query: string){
         const res = await this.http.get(`https://api.tvmaze.com/search/shows?q=:${query}`).toPromise();
+        // console.log("STRING IS SENDET: ", res);
+        
         return this.mapingMovie(res.data, true); 
     } 
+
+    create(user_id: string, provider_id: string, comments: string){
+        const user = this.moviesRepository.create({user_id, provider_id, comments});
+        return this.moviesRepository.save(user)
+    }
     
-    private mapingMovie (movie: any, isArray: boolean):any  {
+    private mapingMovie (movie: any, isArray: boolean, comments: any = ''):any  {
         if(isArray){
             return movie.map(m => {
                 return {
@@ -43,7 +51,7 @@ export class MoviesService {
                     rating: m.show.rating,
                     image: m.show.image, 
                     summary: m.show.summary,
-                    officialSite: m.show.officialSite
+                    officialSite: m.show.officialSite,
                 }
             })
         }else{
@@ -57,7 +65,8 @@ export class MoviesService {
                 rating: movie.rating,
                 image: movie.image, 
                 summary: movie.summary,
-                officialSite: movie.officialSite
+                officialSite: movie.officialSite,
+                comments: comments,
             }
         }
     }

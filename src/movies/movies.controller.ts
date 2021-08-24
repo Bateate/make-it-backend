@@ -1,8 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { GetMovieByIdDto, SearchMovieByStringDto } from 'src/dtos/movies.dto';
-import { MoviesService } from './movies.service';
-import { AxiosResponse } from 'axios'
 import { HttpService } from '@nestjs/axios';
+import { Body, Controller, Get, Header, Param, Post } from '@nestjs/common';
+import { MoviesService } from './movies.service';
 
 
 @Controller('movies')
@@ -11,8 +9,6 @@ export class MoviesController {
         private moviesService: MoviesService, 
         private readonly http: HttpService
         ) { }
-
-
     @Get()
     getAllMovies() {
         return this.moviesService.getAll();
@@ -20,12 +16,14 @@ export class MoviesController {
     
     @Get('/:id')
     async getMovieById(@Param('id') id: string) {        
-        return await this.moviesService.getById(id);
+        const res = await this.moviesService.getById(id)
+        return res;
     }
     
     @Post('/search')
     async searchMovieByString(@Body() body: any) {
-        return await this.moviesService.getByString(body.query);
+        const res = await this.moviesService.getByString(body.query);
+        return res;
     }
 
     @Post('/rate')
@@ -34,8 +32,9 @@ export class MoviesController {
     }
 
     @Post('/comment')
-    commentMovie() {
-        return 'Comment movie';
+    commentMovie(@Body() body: {user_id: string, movie_id: string, comments: string}) {
+        
+        return this.moviesService.create(body.user_id, body.movie_id, body.comments);;
     }
 
 }
